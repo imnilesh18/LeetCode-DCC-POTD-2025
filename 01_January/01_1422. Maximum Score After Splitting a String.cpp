@@ -65,3 +65,78 @@ public:
       return result;
    }
 };
+
+// Approach 2 (Two Passes): Count total ones first, then for each split maintain running count of zeros on left and calculate ones on right by subtracting ones seen from total ones.
+// TC: O(2n) as we make two passes through the string.
+// SC: O(1) as we only use constant extra space.
+class Solution {
+public:
+   int maxScore(string s){
+      int n      = s.length();
+      int result = INT_MIN;
+
+      // Count total ones in string in first pass
+      int total_ones = count(begin(s), end(s), '1');
+
+      int zeros = 0;   // Track zeros in left substring
+      int ones  = 0;   // Track ones seen so far
+
+      for (int i = 0; i <= n - 2; i++) {
+         if (s[i] == '1') {
+            ones++;     // Increment ones seen in left substring
+         } else {
+            zeros++;    // Increment zeros in left substring
+         }
+
+         int right_ones = total_ones - ones;       // Ones in right = total ones - ones in left
+         result = max(result, zeros + right_ones); // Update max score
+      }
+      return result;
+   }
+};
+
+// Approach 3 (In a Single Pass): Use mathematical derivation to transform score formula to (Zl - Ol) + Ot, where Ot is constant, so maximize (Zl - Ol).
+// TC: O(n) for single pass through string.
+// SC: O(1) using only constant extra space.
+
+// The goal is to maximize the score after splitting the string, where:
+// Score = Zl + Or (Zeros in left + Ones in right)
+// Ot = Ol + Or (Total ones = Ones in left + Ones in right)
+// => Or = Ot - Ol (Rearrange to express right ones in terms of total and left ones)
+// Substitute Or in the Score formula:
+// Score = Zl + (Ot - Ol)
+// => Score = (Zl - Ol) + Ot
+// To maximize Score, we need to maximize (Zl - Ol) since Ot is constant.
+class Solution {
+public:
+   int maxScore(string s){
+      int n = s.length();  // Length of the input string
+
+      int score = INT_MIN; // Initialize the score to the smallest possible value
+
+      int zeros = 0;       // Count of zeros in the left substring
+      int ones  = 0;       // Count of ones in the left substring
+
+      // Iterate through the string until the second-to-last character (n-2)
+      // This ensures both left and right substrings are non-empty
+      for (int i = 0; i <= n - 2; i++) {
+         if (s[i] == '1') {
+            ones++;     // Increment count of ones in the left substring
+         } else {
+            zeros++;    // Increment count of zeros in the left substring
+         }
+
+         // Update the score by maximizing (Zl - Ol)
+         score = max(score, zeros - ones);
+      }
+
+      // Check the last character (rightmost part of the split)
+      // If it's '1', add it to the total count of ones
+      if (s[n - 1] == '1') {
+         ones++;
+      }
+
+      // Final score is the best (Zl - Ol) + total number of ones in the string
+      return score + ones;
+   }
+};

@@ -36,7 +36,7 @@
  * locked[i] is either '0' or '1'.
  */
 
-// Approach: Use two stacks - one for tracking fixed opening brackets and another for unlocked positions, process string left to right handling closing brackets, then match remaining opening brackets with unlocked positions.
+// Approach 1 (Using Stack): Use two stacks - one for tracking fixed opening brackets and another for unlocked positions, process string left to right handling closing brackets, then match remaining opening brackets with unlocked positions.
 // TC: O(n) where n is the length of the string
 // SC: O(n) for storing indices in the stacks
 class Solution {
@@ -89,5 +89,62 @@ public:
 
       // String can only be valid if all opening brackets are matched
       return open.empty();
+   }
+};
+
+// Approach 2 (Constant Extra Space): Use two passes - left to right to ensure closing brackets don't exceed opening ones, and right to left to ensure opening brackets don't exceed closing ones.
+// TC: O(n) where n is the length of the string
+// SC: O(1) as we only use constant extra space
+class Solution {
+public:
+   bool canBeValid(string s, string locked){
+      // Get string length
+      int n = s.length();
+
+      // If length is odd, it can't be valid parentheses string
+      if (n % 2 != 0) {
+         return false;
+      }
+
+      // Left to Right scan:
+      // Track available opening brackets (including unlocked positions)
+      int open = 0;
+      for (int i = 0; i < n; i++) {
+         // Count fixed '(' and unlocked positions as potential opening brackets
+         if (s[i] == '(' || locked[i] == '0') {
+            open++;
+         }
+         // Count fixed ')' as closing brackets
+         else {
+            open--;
+         }
+
+         // At any point if closing brackets exceed opening ones, string can't be valid
+         if (open < 0) {
+            return false;
+         }
+      }
+
+      // Right to Left scan:
+      // Track available closing brackets (including unlocked positions)
+      int close = 0;
+      for (int i = n - 1; i >= 0; i--) {
+         // Count fixed ')' and unlocked positions as potential closing brackets
+         if (s[i] == ')' || locked[i] == '0') {
+            close++;
+         }
+         // Count fixed '(' as opening brackets
+         else {
+            close--;
+         }
+
+         // At any point if opening brackets exceed closing ones, string can't be valid
+         if (close < 0) {
+            return false;
+         }
+      }
+
+      // If both scans pass, string can be made valid
+      return true;
    }
 };

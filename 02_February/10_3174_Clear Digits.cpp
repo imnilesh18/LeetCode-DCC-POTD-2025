@@ -72,5 +72,5 @@ public:
  * 6. i = 0: End of string reached → exit loop.
  *
  * Output: ""
- ******** End Dry Run ********
+ * End Dry Run
  */

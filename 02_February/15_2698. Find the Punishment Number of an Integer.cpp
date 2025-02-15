@@ -61,7 +61,7 @@ public:
       }
       return punish;
    }
-}
+};
 
 /*
  * Dry run:

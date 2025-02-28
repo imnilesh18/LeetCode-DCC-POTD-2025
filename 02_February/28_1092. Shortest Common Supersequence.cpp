@@ -1,7 +1,7 @@
 /*
  * 1092. Shortest Common Supersequence
  * (Solve First : Shortest Common Supersequence GfG
- * GfG Link: https://www.geeksforgeeks.org/problems/shortest-common-supersequence0322/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=practice_card)
+ * GfG Link: https://www.geeksforgeeks.org/problems/shortest-common-supersequence0322/1)
  *
  * Given two strings str1 and str2, return the shortest string that has both str1 and str2 as subsequences. If there are multiple valid strings, return any of them.
  *

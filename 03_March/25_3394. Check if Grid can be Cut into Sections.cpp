@@ -42,13 +42,13 @@
 class Solution {
 public:
     // Merge overlapping intervals in a given list
-    vector<vector<int> > merge(vector<vector<int> >& intervals) {
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
         int n = intervals.size();
 
         // Sort intervals based on their starting point
         sort(begin(intervals), end(intervals));
 
-        vector<vector<int> > result;
+        vector<vector<int>> result;
         // Initialize result with the first interval
         result.push_back(intervals[0]);
 
@@ -65,10 +65,11 @@ public:
         }
         return result;
     }
+
     // Check if the grid can be cut into 3 sections using either horizontal or vertical cuts
-    bool checkValidCuts(int n, vector<vector<int> >& rectangles) {
-        vector<vector<int> > hor;     // Horizontal projections: x-range intervals
-        vector<vector<int> > vert;    // Vertical projections: y-range intervals
+    bool checkValidCuts(int n, vector<vector<int>>& rectangles) {
+        vector<vector<int>> hor;     // Horizontal projections: x-range intervals
+        vector<vector<int>> vert;    // Vertical projections: y-range intervals
 
         // Extract x-range and y-range for each rectangle
         for (auto& coord : rectangles) {
@@ -82,14 +83,14 @@ public:
         }
 
         // Merge the x-range intervals for horizontal cut checking
-        vector<vector<int> > result1 = merge(hor);
+        vector<vector<int>> result1 = merge(hor);
         // If merging results in 3 or more segments, valid horizontal cuts exist
         if (result1.size() >= 3) {
             return true;
         }
 
         // Merge the y-range intervals for vertical cut checking
-        vector<vector<int> > result2 = merge(vert);
+        vector<vector<int>> result2 = merge(vert);
         // If merging results in 3 or more segments, valid vertical cuts exist
         return result2.size() >= 3;
     }

@@ -86,7 +86,6 @@ public:
 };
 
 /*
- *
  * Dry Run
  * Input: s = "bac"
  *

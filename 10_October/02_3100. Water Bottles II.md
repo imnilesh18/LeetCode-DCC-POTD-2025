@@ -1,17 +1,13 @@
-# ✨ 3100. Water Bottles II
-
-<div align="center">
-    <a href="https://leetcode.com/problems/water-bottles-ii/description/">
-        <img src="https://img.shields.io/badge/LeetCode-Link-blue?style=for-the-badge&logo=leetcode" alt="LeetCode Link">
-    </a>
-    <img src="https://img.shields.io/badge/Difficulty-Medium-yellow?style=for-the-badge" alt="Difficulty: Medium">
-    <img src="https://img.shields.io/badge/Language-C%2B%2B-orange?style=for-the-badge&logo=c%2B%2B" alt="Language: C++">
-</div>
-
-<br>
+# 💧 3100. Water Bottles II
 
 <p align="center">
-  <img src="https://assets.leetcode.com/uploads/2024/01/28/exampleone1.png" alt="Problem Illustration" width="600px">
+  <img src="https://img.shields.io/badge/LeetCode-3100-yellow?style=for-the-badge" alt="LeetCode Problem 3100">
+  <img src="https://img.shields.io/badge/Difficulty-Medium-orange?style=for-the-badge" alt="Medium Difficulty">
+  <img src="https://img.shields.io/badge/Language-C++-blue?style=for-the-badge" alt="C++ Language">
+</p>
+
+<p align="center">
+  <img src="https://assets.leetcode.com/uploads/2024/01/28/exampleone1.png" alt="Problem Illustration" width="600">
 </p>
 
 ---
@@ -21,103 +17,129 @@
 You are given two integers `numBottles` and `numExchange`.
 
 `numBottles` represents the number of full water bottles that you initially have. In one operation, you can perform one of the following operations:
-- Drink any number of full water bottles turning them into empty bottles.
-- Exchange `numExchange` empty bottles with one full water bottle. Then, increase `numExchange` by one.
 
-Note that you cannot exchange multiple batches of empty bottles for the same value of `numExchange`. For example, if `numBottles == 3` and `numExchange == 1`, you cannot exchange `3` empty water bottles for `3` full bottles.
+1. Drink any number of full water bottles turning them into empty bottles.
+2. Exchange `numExchange` empty bottles with one full water bottle. Then, increase `numExchange` by one.
+
+**Note:** You cannot exchange multiple batches of empty bottles for the same value of `numExchange`. For example, if you have 13 empty bottles and `numExchange` is 6, you can exchange 6 empty bottles for 1 full bottle, but you cannot immediately exchange another 6 empty bottles. The value of `numExchange` will increase to 7 for the next exchange.
 
 Return the **maximum** number of water bottles you can drink.
 
 ---
 
-## ⚙️ Constraints
+## ⛓️ Constraints
 
 - `1 <= numBottles <= 100`
 - `1 <= numExchange <= 100`
 
 ---
 
-## 🧪 Examples
+## 📋 Examples
 
-Here are a couple of examples to illustrate the process:
+### Example 1:
 
-<center>
+| Full Bottles | Empty Bottles | `numExchange` | Drunk | Action                                     |
+| :----------: | :-----------: | :-----------: | :---: | :----------------------------------------- |
+|      13      |       0       |       6       |   0   | **Initial State**                          |
+|      0       |      13       |       6       |  13   | Drink 13 bottles                           |
+|      1       |       7       |       7       |  14   | Exchange 6 empty for 1 full, then drink it |
+|      1       |       1       |       8       |  15   | Exchange 7 empty for 1 full, then drink it |
+|      0       |       2       |       8       |  15   | Stop (2 empty < 8 required)                |
 
-| Input                        | Output | Explanation                                                                                                                              |
-| ---------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `numBottles = 13`, `numExchange = 6` | `15`   | You drink 13 bottles, have 13 empty. Exchange 6 for 1 new bottle (drink count: 14), now have 8 empty. Exchange 7 for 1 new bottle (drink count: 15). No more exchanges possible. |
-| `numBottles = 10`, `numExchange = 3` | `13`   | You drink 10 bottles, have 10 empty. Exchange 3, 4, and 5 empty bottles in sequence for 3 new bottles. Total drunk: 10 + 3 = 13. |
+**Input:** `numBottles = 13`, `numExchange = 6`
+**Output:** `15`
 
-</center>
+### Example 2:
+
+| Full Bottles | Empty Bottles | `numExchange` | Drunk | Action                                     |
+| :----------: | :-----------: | :-----------: | :---: | :----------------------------------------- |
+|      10      |       0       |       3       |   0   | **Initial State**                          |
+|      0       |      10       |       3       |  10   | Drink 10 bottles                           |
+|      1       |       7       |       4       |  11   | Exchange 3 empty for 1 full, then drink it |
+|      1       |       4       |       5       |  12   | Exchange 4 empty for 1 full, then drink it |
+|      1       |       0       |       6       |  13   | Exchange 5 empty for 1 full, then drink it |
+|      0       |       1       |       6       |  13   | Stop (1 empty < 6 required)                |
+
+**Input:** `numBottles = 10`, `numExchange = 3`
+**Output:** `13`
 
 ---
 
-## 🧠 Approach
+## 🤔 Approach
 
-The problem asks for the maximum number of bottles we can drink. This can be solved using a direct simulation. We start with a certain number of full bottles, drink them all, and then use the resulting empty bottles to get more full bottles through exchanges.
+The problem asks for the maximum number of bottles we can drink. We start with a certain number of full bottles, which we can drink immediately. This gives us empty bottles, which can then be exchanged for new full bottles. The catch is that the cost of exchange (`numExchange`) increases by one after each exchange.
 
-The key aspects of the simulation are:
-1.  **Initial State**: We begin by drinking all `numBottles`. So, our initial count of drunk bottles is `numBottles`, and we have `numBottles` empty bottles.
-2.  **Exchange Loop**: We can continue to exchange empty bottles for full ones as long as we have enough. The condition for an exchange is `emptyBottle >= numExchange`.
-3.  **State Updates per Exchange**:
-    - We use `numExchange` empty bottles.
-    - We gain one new full bottle. We immediately drink it.
-    - This means our total `drunk` count increases by 1.
-    - The new bottle becomes an empty bottle.
-    - So, the net change in empty bottles is `-numExchange` (from the exchange) `+ 1` (from drinking the new bottle).
-    - Crucially, the cost of the next exchange increases: `numExchange` is incremented by 1.
-4.  **Termination**: The process stops when we no longer have enough empty bottles to meet the current `numExchange` requirement.
+### 🧠 Simulation Approach
 
-The final answer is the total number of bottles drunk, which is the initial `numBottles` plus any additional bottles gained through exchanges.
+This is the most intuitive way to solve the problem. We can directly simulate the process described:
+
+1.  **Drink Initial Bottles:** We start by drinking all the `numBottles` we have. The total number of drunk bottles becomes `numBottles`, and we now have `numBottles` empty bottles.
+2.  **Loop for Exchanges:** We enter a loop that continues as long as we have enough empty bottles to make an exchange (i.e., `emptyBottles >= numExchange`).
+3.  **Perform Exchange:** Inside the loop, we:
+    - Subtract `numExchange` from our `emptyBottles` count.
+    - Increment `numExchange` for the next potential exchange.
+    - We receive one new full bottle. We immediately drink it, so we increment our total `drunk` count.
+    - Since we drank the new bottle, it becomes empty. We increment our `emptyBottles` count by one.
+4.  **Termination:** The loop stops when we can no longer afford an exchange. The final `drunk` count is our answer.
+
+### 📐 Mathematical Approach (O(1) Solution)
+
+Instead of simulating, we can derive a mathematical formula. The core idea is to determine the maximum number of exchanges, let's call it `x`, that we can perform.
+
+- The initial `numBottles` can all be drunk.
+- The number of extra bottles we can drink is equal to the number of successful exchanges (`x`).
+- The cost of the exchanges forms an arithmetic progression: `numExchange`, `numExchange + 1`, `numExchange + 2`, ..., `numExchange + x - 1`.
+- The total number of empty bottles required for `x` exchanges is the sum of this series.
+- The total empty bottles available to us comes from the initial `numBottles` plus the `x` bottles we get from the exchanges.
+
+By setting up an inequality where `(available empty bottles) >= (required empty bottles)`, we get a quadratic inequality in terms of `x`. Solving this using the quadratic formula (Sridharacharya formula) gives us the value of `x` directly. The final answer is `numBottles + x`.
 
 ---
 
 ## 💻 Solution Code
 
-### Optimized Solution (Simulation)
+### Solution 1: Simulation
 
 ```cpp
 // Intuition:
-// The problem can be solved by simulating the process step-by-step. We start by drinking all the initial bottles. Then, we repeatedly check if we have enough empty bottles to exchange for a new one. Each time we make an exchange, we drink the new bottle, update our counts of empty bottles and drunk bottles, and increase the exchange cost for the next round.
+// The problem can be solved by directly simulating the process of drinking and exchanging bottles
+// step-by-step until no more exchanges are possible.
 
 // Approach:
-// 1. Initialize `emptyBottle` to `numBottles`, as we drink all initial bottles first.
-// 2. Initialize `drink` to count the number of bottles drunk through exchanges.
-// 3. Use a `while` loop that continues as long as we have enough empty bottles to make an exchange (`emptyBottle >= numExchange`).
-// 4. Inside the loop:
-//    a. Decrease `emptyBottle` by `numExchange` for the exchange.
-//    b. Increment `numExchange` for the next transaction.
-//    c. Increment `drink` because we got one new bottle to drink.
-//    d. Increment `emptyBottle` by 1, as the newly acquired bottle is also drunk and becomes empty.
-// 5. The total number of drunk bottles is the initial `numBottles` plus the extra bottles (`drink`) we obtained via exchanges. Return this sum.
+// 1. Initialize 'drink' with the initial 'numBottles', as we can drink all of them.
+// 2. Initialize 'emptyBottle' to 'numBottles'.
+// 3. Use a while loop that continues as long as we have enough empty bottles for an exchange (`emptyBottle >= numExchange`).
+// 4. In each iteration:
+//    a. Decrease 'emptyBottle' by 'numExchange' to pay for the new bottle.
+//    b. Increment 'numExchange' for the next round.
+//    c. Increment 'drink' because we get a new bottle to drink.
+//    d. Increment 'emptyBottle' because the newly drunk bottle becomes empty.
+// 5. The total bottles drunk is the initial `numBottles` plus the `drink` count from exchanges.
 
 // Time Complexity: O(sqrt(numBottles))
-// The number of loop iterations depends on how quickly `numExchange` grows compared to how `emptyBottle` decreases. `numExchange` increases linearly (k, k+1, k+2, ...), which is an arithmetic progression. The number of iterations is relatively small and bounded, making this efficient for the given constraints.
+// The number of exchanges 'k' is limited. The total bottles required for 'k' exchanges grows quadratically (sum of an arithmetic series).
+// So, k^2 is roughly proportional to numBottles, making the number of loop iterations k proportional to sqrt(numBottles).
 
 // Space Complexity: O(1)
-// We only use a few variables (`emptyBottle`, `drink`, `numExchange`) to keep track of the state, so the space used is constant.
-
+// We only use a few variables to store counts, regardless of the input size.
 class Solution {
 public:
     int maxBottlesDrunk(int numBottles, int numExchange) {
-        // Initially, all full bottles are drunk, becoming empty bottles.
-        int emptyBottle = numBottles;
-        // 'drink' will count bottles drunk from exchanges.
-        int drink = 0;
-        
-        // Loop as long as we can exchange empty bottles for a full one.
+        int emptyBottle = numBottles; // Start with empty bottles from initial drinking
+        int drink = 0; // Counter for bottles drunk via exchange
+
+        // Loop as long as we can afford an exchange
         while(emptyBottle >= numExchange) {
-            // Perform the exchange.
+            // Pay for the exchange
             emptyBottle -= numExchange;
-            // The cost for the next exchange increases.
+            // The cost for the next exchange increases
             numExchange++;
-            // We gained one new bottle and drank it.
+            // We get one new bottle and drink it
             drink++;
-            // The newly drunk bottle becomes an empty one.
+            // The new bottle is now empty, adding to our pool
             emptyBottle++;
         }
-        
-        // Total drunk is initial bottles + exchanged bottles.
+        // Total is initial bottles + bottles from exchanges
         return numBottles + drink;
     }
 };
@@ -125,72 +147,114 @@ public:
 /*
 *
 * Dry Run
-*
 * Input: numBottles = 13, numExchange = 6
 *
-* Initial state:
-* - numBottles = 13
-* - numExchange = 6
-* - emptyBottle = 13
-* - drink = 0
-*
-* --> Start while loop (condition: emptyBottle >= numExchange)
-*
-* Iteration 1:
-* - Condition: 13 >= 6 (True)
-* - emptyBottle = 13 - 6 -> 7
-* - numExchange = 6 + 1 -> 7
-* - drink = 0 + 1 -> 1
-* - emptyBottle = 7 + 1 -> 8
+* Initial State:
+* numBottles = 13
+* numExchange = 6
+* drink = 0
+* emptyBottle = 13 (from drinking the initial 13 bottles)
+* * Iteration 1:
+* Condition: emptyBottle (13) >= numExchange (6) -> true
+* emptyBottle = 13 - 6 = 7
+* numExchange = 6 + 1 = 7
+* drink = 0 + 1 = 1
+* emptyBottle = 7 + 1 = 8
 *
 * Iteration 2:
-* - Condition: 8 >= 7 (True)
-* - emptyBottle = 8 - 7 -> 1
-* - numExchange = 7 + 1 -> 8
-* - drink = 1 + 1 -> 2
-* - emptyBottle = 1 + 1 -> 2
+* Condition: emptyBottle (8) >= numExchange (7) -> true
+* emptyBottle = 8 - 7 = 1
+* numExchange = 7 + 1 = 8
+* drink = 1 + 1 = 2
+* emptyBottle = 1 + 1 = 2
 *
 * Iteration 3:
-* - Condition: 2 >= 8 (False)
-* - Loop terminates.
+* Condition: emptyBottle (2) >= numExchange (8) -> false
+* Loop terminates.
 *
-* Final Calculation:
-* - Return numBottles + drink = 13 + 2 = 15
+* Final Result:
+* return numBottles + drink = 13 + 2 = 15
 *
-* Output: 15
+*/
+```
+
+### Solution 2: Mathematical O(1) Approach
+
+```cpp
+// Intuition:
+// Instead of simulating, we can derive a direct mathematical formula to find the maximum
+// number of exchanges possible. This transforms the iterative problem into a constant-time calculation.
+
+// Approach:
+// The problem of finding the maximum number of exchanges ('x') can be modeled as a quadratic inequality.
+// Total empty bottles available = numBottles + x
+// Total empty bottles required for 'x' exchanges = sum of an arithmetic series from numExchange to numExchange + x - 1
+// The inequality is solved using the Sridharacharya formula (quadratic formula) for 'x'.
+// The final answer is numBottles (initial) + x (from exchanges). This code directly implements the solved formula.
+
+// Time Complexity: O(1)
+// The solution involves a fixed number of arithmetic operations and a square root, which are considered constant time.
+
+// Space Complexity: O(1)
+// No extra space is used that scales with the input.
+
+//Approach-2 (Maths derivation - Using Sridharacharya formula)
+//T.C : O(1)
+//S.C : O(1)
+class Solution {
+public:
+    int maxBottlesDrunk(int numBottles, int numExchange) {
+        // The formula calculates the number of successful exchanges ('x') and adds it to the initial bottles.
+        // This is derived from solving the quadratic inequality representing the exchange process.
+        return numBottles + ((-2 * numExchange + 3 + sqrt(4 * numExchange * numExchange + 8 * numBottles - 12 * numExchange + 1)) / 2);
+    }
+};
+
+/*
+*
+* Dry Run
+* Input: numBottles = 13, numExchange = 6
+*
+* The formula calculates 'x' (number of exchanges):
+* x = ((-2*6 + 3 + sqrt(4*6*6 + 8*13 - 12*6 + 1)) / 2)
+* x = ((-12 + 3 + sqrt(144 + 104 - 72 + 1)) / 2)
+* x = ((-9 + sqrt(177)) / 2)
+* x = ((-9 + 13.304) / 2)
+* x = (4.304 / 2)
+* x = 2.152
+* Taking the integer part, max exchanges possible is 2.
+*
+* Final Result:
+* return numBottles + x = 13 + 2 = 15
 *
 */
 ```
 
 ---
 
-## 📌 Key Insights
+## 💡 Key Insights
 
-- **Greedy Simulation**: The most straightforward approach is a greedy one. At each step, if we can make an exchange, we should do it. There's no benefit in holding onto empty bottles because the exchange cost only increases.
-- **State Management**: The core of the problem is correctly updating the state variables (`emptyBottle` and `numExchange`) within the loop. The net change in empty bottles after one full cycle of exchanging and drinking is `+1 - numExchange`.
-
----
+- **Simulation vs. Formula:** While the simulation approach is intuitive and easy to code, the mathematical approach offers a highly efficient O(1) solution. Understanding how to model iterative problems mathematically can lead to significant performance improvements.
+- **Greedy Choice:** At each step, it is always optimal to perform an exchange if possible. There is no benefit in holding onto empty bottles, as the exchange cost only increases. This justifies the greedy approach used in the simulation.
 
 ## 🚀 Further Exploration
 
-- Can you devise a purely mathematical formula to solve this without a loop? This would involve solving for the number of successful exchanges given the arithmetic progression of `numExchange`.
-- How would the solution change if `numExchange` decreased by one after each exchange instead of increasing?
+- Can you solve this problem recursively? What would be the state variables for the recursion?
+- Consider how the problem changes if `numExchange` could decrease or stay the same under certain conditions.
+- Explore other problems where a simulation can be optimized into a mathematical formula (e.g., problems involving arithmetic or geometric series).
 
 ---
 
 ## 📚 References
 
-- [LeetCode Problem: Water Bottles II](https://leetcode.com/problems/water-bottles-ii/description/)
+- [LeetCode Problem Link](https://leetcode.com/problems/water-bottles-ii/description/)
+- [Quadratic Formula](https://en.wikipedia.org/wiki/Quadratic_formula)
 
 ---
 
 ## 🏷️ Tags
 
-<div align="center">
-    <a href="https://leetcode.com/tag/simulation/"><img src="https://img.shields.io/badge/Simulation-lightgrey?style=for-the-badge" alt="Simulation"></a>
-    <a href="https://leetcode.com/tag/math/"><img src="https://img.shields.io/badge/Math-grey?style=for-the-badge" alt="Math"></a>
-    <a href="https://leetcode.com/tag/greedy/"><img src="https://img.shields.io/badge/Greedy-green?style=for-the-badge" alt="Greedy"></a>
-</div>
+`Simulation`, `Math`, `Greedy`, `Medium`
 
 ---
 
@@ -198,7 +262,7 @@ public:
 
 This repository is released under the [MIT License](./LICENSE).
 
-> **This repository and its solutions are provided for educational purposes only and are not intended for commercial use. Please refer to the [LeetCode problem statement](https://leetcode.com/problems/water-bottles-ii/) for original content and copyright.**
+> **This repository and its solutions are provided for educational purposes only and are not intended for commercial use. Please refer to the [LeetCode problem statement](https://leetcode.com/problems/water-bottles-ii/description/) for original content and copyright.**
 
 ---
 
